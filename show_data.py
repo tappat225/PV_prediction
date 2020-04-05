@@ -31,3 +31,15 @@ plt.show()
 # i+= 1
 # plt.show()
 
+
+# v2.0 #
+# values = train_data.values
+# groups = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+# i = 1
+# plt.figure(figsize=(10, 10))
+# for group in groups:
+#     plt.subplot(len(groups), 1, i)
+#     plt.plot(values[:, group])
+#     plt.title(train_data.columns[group], y=0.5, loc='right')
+#     i += 1
+# plt.show()
