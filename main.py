@@ -14,6 +14,7 @@ train_data = train_data[features]
 target_feature = ['Dew_Pt.']
 
 
+# 标准化
 def pre_std(data):
     data = data.dropna()
     dataset = data.values
@@ -35,50 +36,51 @@ pre_std(train_data)
 # print(train_data.shape)
 data_X, data_Y = creat_dataset(train_data)
 
-data_X = data_X.reshape(-1, len(data_X))
-data_Y = data_Y.reshape(-1, len(data_Y))
+data_X = data_X.reshape(data_X.shape[0], 1, data_X.shape[1])
+data_Y = data_Y.reshape(data_Y.shape[0], 1, data_Y.shape[1])
 
 data_X = torch.from_numpy(data_X)
 data_Y = torch.from_numpy(data_Y)
 print(data_X.shape)
-#
-# class LSTMNet(nn.Module):
-#
-#     def __init__(self, input_size):
-#         super(LSTMNet, self).__init__()
-#         self.rnn = nn.LSTM(
-#             input_size=input_size,
-#             hidden_size=50,
-#             num_layers=1,
-#             batch_first=True,
-#         )
-#         self.out = nn.Sequential(
-#             nn.Linear(50, 1)
-#         )
-#
-#     def forward(self, x):
-#         r_out, (h_n, h_c) = self.rnn(x, None)  # None 表示 hidden state 会用全0的 state
-#         out = self.out(r_out[:, -1])
-#         print(out.shape)
-#         return out
-#
-#
-# lstm = LSTMNet(len(data_X))
-# optimizer = torch.optim.Adam(lstm.parameters(), lr=0.02)
-# loss_func = nn.MSELoss()
-# epochs = 150
-#
-#
-# for e in range(epochs):
-#     var_x = Variable(data_X)
-#     var_y = Variable(data_Y)
-#     # 前向传播
-#     out = lstm(var_x)
-#     loss = loss_func(out, var_y)
-#     # 反向传播
-#     optimizer.zero_grad()
-#     loss.backward()
-#     optimizer.step()
-#     if (e+1) % 25 == 0:
-#         print('Epoch:{}, Loss:{:.5f}'.format(e+1, loss.item()))
+
+
+class LSTMNet(nn.Module):
+
+    def __init__(self, input_size):
+        super(LSTMNet, self).__init__()
+        self.rnn = nn.LSTM(
+            input_size=input_size,
+            hidden_size=50,
+            num_layers=1,
+            batch_first=True,
+        )
+        self.out = nn.Sequential(
+            nn.Linear(50, 1)
+        )
+
+    def forward(self, x):
+        r_out, (h_n, h_c) = self.rnn(x, None)  # None 表示 hidden state 会用全0的 state
+        out = self.out(r_out[:, -1])
+        print(out.shape)
+        return out
+
+
+lstm = LSTMNet(data_X.shape[0])
+optimizer = torch.optim.Adam(lstm.parameters(), lr=0.02)
+loss_func = nn.MSELoss()
+epochs = 150
+
+
+for e in range(epochs):
+    var_x = Variable(data_X)
+    var_y = Variable(data_Y)
+    # 前向传播
+    out = lstm(var_x)
+    loss = loss_func(out, var_y)
+    # 反向传播
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    if (e+1) % 25 == 0:
+        print('Epoch:{}, Loss:{:.5f}'.format(e+1, loss.item()))
 
