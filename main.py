@@ -46,10 +46,10 @@ print(data_X.shape)
 
 class LSTMNet(nn.Module):
 
-    def __init__(self, input_size):
+    def __init__(self):
         super(LSTMNet, self).__init__()
         self.rnn = nn.LSTM(
-            input_size=input_size,
+            input_size=10,
             hidden_size=50,
             num_layers=1,
             batch_first=True,
@@ -60,20 +60,20 @@ class LSTMNet(nn.Module):
 
     def forward(self, x):
         r_out, (h_n, h_c) = self.rnn(x, None)  # None 表示 hidden state 会用全0的 state
-        out = self.out(r_out[:, -1])
-        print(out.shape)
+        out = self.out(r_out[:, -1, :])
+        # print(out.shape)
         return out
 
 
-lstm = LSTMNet(data_X.shape[0])
+lstm = LSTMNet()
 optimizer = torch.optim.Adam(lstm.parameters(), lr=0.02)
 loss_func = nn.MSELoss()
-epochs = 150
-
+epochs = 500
+print(lstm)
 
 for e in range(epochs):
-    var_x = Variable(data_X)
-    var_y = Variable(data_Y)
+    var_x = Variable(data_X).type(torch.FloatTensor)
+    var_y = Variable(data_Y).type(torch.FloatTensor)
     # 前向传播
     out = lstm(var_x)
     loss = loss_func(out, var_y)
