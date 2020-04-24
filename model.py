@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from read_both import train_test
+from test import train_test
 
 train_test()
 

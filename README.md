@@ -23,6 +23,10 @@
 
 `model.py` 神经网络模型
 
+`lstm.py` LSTM神经网络模型
+
+`corr_analyse.py` 相关性分析
+
 ---
 记录
 
