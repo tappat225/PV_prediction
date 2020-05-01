@@ -1,12 +1,8 @@
 import torch
 import torch.nn as nn
-from test import train_test
 
-train_test()
 
-#############
-# 搭建LSTM模型
-#############
+# LSTM模型(旧)
 class LSTM(nn.Module):
     def __init__(self, input_size=(train_X.shape[1]), hidden_layer_size=100, output_size=1):
         super().__init__()
@@ -25,6 +21,23 @@ class LSTM(nn.Module):
         return predictions[-1]
 
 
-model = LSTM()
-loss_function = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+# LSTM模型(可用)
+class LSTMNet(nn.Module):
+
+    def __init__(self):
+        super(LSTMNet, self).__init__()
+        self.rnn = nn.LSTM(
+            input_size=10,
+            hidden_size=50,
+            num_layers=1,
+            batch_first=True,
+        )
+        self.out = nn.Sequential(
+            nn.Linear(50, 1)
+        )
+
+    def forward(self, x):
+        r_out, (h_n, h_c) = self.rnn(x, None)  # None 表示 hidden state 会用全0的 state
+        out = self.out(r_out[:, -1, :])
+        # print(out.shape)
+        return out
