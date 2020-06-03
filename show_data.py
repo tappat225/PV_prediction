@@ -1,45 +1,34 @@
 import torch
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from pylab import *
 
-CSV_FILE_PATH = './test.csv'
-df = pd.read_csv(CSV_FILE_PATH, header=0)
-date_set = df.head(1000)
-# print(df.head(5))
+mpl.rcParams['font.sans-serif'] = ['SimHei']
 
-values = date_set.values
-groups = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-i = 1
-plt.figure(figsize=(10, 10))
-for group in groups:
-    plt.subplot(len(groups), 1, i)
-    plt.plot(values[:, group])
-    plt.title(date_set.columns[group], y=0.5, loc='right')
-    i += 1
+file_path = './91-Site_1A-Trina_5W.csv'
+data = pd.read_csv(file_path, header=0, low_memory=False, index_col=0)
+data = data.rename(columns={
+    u'1A Trina - Active Energy Delivered-Received (kWh)': 'AE_Power',
+    u'1A Trina - Current Phase Average (A)': 'Current', #电流
+    u'1A Trina - Wind Speed (m/s)': 'Wind_speed',   #风速
+    u'1A Trina - Active Power (kW)': 'Power',   #功率
+    u'1A Trina - Weather Relative Humidity (%)': 'Humidity',    #湿度
+    u'1A Trina - Weather Temperature Celsius (\xb0C)': 'Temp',    #气温
+    u'1A Trina - Global Horizontal Radiation (W/m\xb2)': 'GHI',   #全球水平辐照度
+    u'1A Trina - Diffuse Horizontal Radiation (W/m\xb2)': 'DHI',   #扩散水平辐照度
+    u'1A Trina - Wind Direction (Degrees)': 'Wind_dir',  #风向
+    u'1A Trina - Weather Daily Rainfall (mm)': 'Rainfall'   #降雨
+})
+time = 'Timestamp'
+data = data['Power']
+data = data[:865]
+data = data.fillna(0)
+data = data.values
+# data = data * 1000
+x = np.linspace(0, 72, 865)
+plt.xlabel('时间(单位：小时)')
+plt.ylabel('功率(单位：kW)')
+plt.plot(x, data)
+plt.xlim(-1, 73)
 plt.show()
-
-# values = dataset.values  
-# # specify columns to plot  
-# groups = [0, 1, 2, 3, 5, 6, 7, 8, 9]  
-# i = 1
-# # plot each column  
-#     pyplot.figure(figsize=(10,10))  
-# for group in groups:  
-#    pyplot.subplot(len(groups), 1, i)  
-#     pyplot.plot(values[:, group])  
-#   pyplot.title(dataset.columns[group], y=0.5, loc='right')  
-# i+= 1
-# plt.show()
-
-
-# v2.0 #
-# values = train_data.values
-# groups = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-# i = 1
-# plt.figure(figsize=(10, 10))
-# for group in groups:
-#     plt.subplot(len(groups), 1, i)
-#     plt.plot(values[:, group])
-#     plt.title(train_data.columns[group], y=0.5, loc='right')
-#     i += 1
-# plt.show()
