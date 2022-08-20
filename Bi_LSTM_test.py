@@ -28,7 +28,7 @@ data = data.drop(columns='Rainfall')
 input_feature_num = 7
 feature = ['Current', 'Wind_speed', 'Power', 'Humidity', 'Temp', 'GHI', 'DHI', 'Wind_dir']
 # 设定输入特征
-input_feature = ['Current', 'Wind_speed', 'Humidity', 'Temp', 'GHI', 'DHI', 'Wind_dir']
+input_feature = ['Wind_speed', 'Humidity', 'Temp', 'GHI']
 # 设定目标特征
 target_feature = ['Power']
 # dataset = data[~data['Power'].isin([0])].dropna(axis=0)
@@ -44,7 +44,7 @@ scaler = MinMaxScaler()
 data[feature] = scaler.fit_transform(data[feature].to_numpy())
 
 # 设置因素特征数据集
-data_x = data.drop(columns=target_feature)
+data_x = data[input_feature]
 # 设置目标特征数据集
 data_y = data[target_feature]
 # data.to_csv('./dataset.csv')
